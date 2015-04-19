@@ -43,34 +43,20 @@
 <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
         <script type="text/javascript" src="cordova.js"></script>
         
-         <script type="text/javascript" src="imeiplugin.js"></script>
+         <!--<script type="text/javascript" src="imeiplugin.js"></script>-->
         <script type="text/javascript">
            // app.initialize();
             
-            function callback(imei) {
-            	localStorage.setItem('URL','');
-            	localStorage.setItem('IMEI',imei);
-            	url=localStorage.getItem('URL');
-            	$.get(url+'/GetUserData/'+imei,function(data){
-            		if(data==true)
-            		{
-            			$.get(url+'/GetUserRunningGame',function(data){
-            				
-            				if(data !='0')
-            				location.href="ScanPage.html";
-            				else
-            				alert("There are no active games.. plz try after some time.");
-            				
-            			}
-            			
-            			
-            		}
-            		
-            		else
-            		location.href="UserRegister.html";
-            	});
+          //  function callback(imei) {
+            //	url=localStorage.getItem('URL');
+            //	$.get(url+'/GetUserData/'+imei,function(data){
+            //		if(data==true)
+            //		location.href="ScanPage.html";
+            //		else
+            //		location.href="UserRegister.html";
+            	//});
     //alert("My Android IMEI :" + imei);
-}
+//}
 
 
    window.onload=function(){
@@ -80,8 +66,52 @@
               }
               
               function onDeviceReady(){
-              	window.plugins.imeiplugin.getImei(callback);
-              }
+              	url=localStorage.getItem('URL');
+              	Imei = localStorage.getItem('IMEI');
+              		 checkInternetConnection();
+	 				  scan= function() {
+   							 window.plugins.barcodeScanner.scan( function(result) {
+        //alert("We got a barcode\n" +"Result: " + result.text + "\n" +"Format: " + result.format + "\n" +"Cancelled: " + result.cancelled);
+       						 	$.get(url+'/PutGameScans/0/'+result.text+'/'+Imei,function(data){
+            				
+            				if(data !='-1')
+            					scan();
+            				else
+            					alert("There are no active games.. plz try after some time.");
+            					exitMethod();
+            				
+            					}
+       						 
+   							 }, function(error) {
+    	    						alert("Scanning failed: " + error);
+    								});
+   					}
+              //	window.plugins.imeiplugin.getImei(callback);
+ 				}
+              
+              
+              
+function exitMethod()
+	{
+	 try
+	 {
+	 navigator.app.exitApp();
+	 }
+	 catch(err)
+	 {
+		 alert(err.message);
+	 }
+}
+
+function checkInternetConnection()
+{
+	if(!navigator.onLine)
+	{
+		 alert("NO Internet connection...Please check the internet connection.");
+		 exitMethod();
+	}
+}
+              
           
         </script>
     </body>
