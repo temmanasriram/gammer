@@ -37,15 +37,19 @@
                 <p class="event received">Device is Ready</p>
             </div>
         </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-         <script type="text/javascript" src="imeiplugin.js"></script>
+       <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript">
-            app.initialize();
-            window.plugins.imeiplugin.getImei(callback);
-            function callback(imei) {
-    console.log("My Android IMEI :" + imei);
-}
+               window.onload=function(){
+               	alert("1");
+              document.addEventListener("deviceready",onDeviceReady,false);
+              //location.href="Login.html";
+              }
+              
+              function onDeviceReady(){
+              	alert("2");
+              	location.href="Login.html";
+              }
+            
         </script>
     </body>
 </html>
